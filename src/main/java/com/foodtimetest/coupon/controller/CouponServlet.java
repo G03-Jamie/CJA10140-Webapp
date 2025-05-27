@@ -189,7 +189,7 @@ public class CouponServlet extends HttpServlet {
 
 			/*************************** 3.修改完成,準備轉交(Send the Success view) *************/
 			req.setAttribute("couponVO", couponVO); // 資料庫update成功後,正確的的couponVO物件,存入req/
-			System.out.println("✅ 有執行 update，couId=" + couponVO.getCouId());
+
 			
 			String url = "/coupon/listOneCoupon.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
