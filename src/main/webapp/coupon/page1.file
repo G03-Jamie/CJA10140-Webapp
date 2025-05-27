@@ -1,0 +1,44 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%  int rowsPerPage = 3;  //每頁的筆數    
+    int rowNumber=0;      //總筆數
+    int pageNumber=0;     //總頁數      
+    int whichPage=1;      //第幾頁
+    int pageIndexArray[]=null;
+    int pageIndex=0; 
+%>
+
+<%  
+    rowNumber=list.size();
+    if (rowNumber%rowsPerPage !=0)
+         pageNumber=rowNumber/rowsPerPage + 1;  //不能整除，要補一頁顯示剩下的資料
+    else pageNumber=rowNumber/rowsPerPage;     //總頁數 = 筆數 ÷ 每頁筆數
+
+    pageIndexArray=new int[pageNumber]; 
+    for (int i=1 ; i<=pageIndexArray.length ; i++)
+         pageIndexArray[i-1]=i*rowsPerPage-rowsPerPage;
+
+  //儲存每頁的起始索引 page1 : 1×3 − 3 = 0
+  //page2: 2x3 -3 =3
+  //page3: 3x3 -3 =6
+  //陣列會變成 [0, 3, 6]
+%>
+
+<%  try { //瀏覽器取得目前使用者要看第幾頁  coupon.jsp?whichPage=2，就會取到 whichPage = 2，
+       whichPage = Integer.parseInt(request.getParameter("whichPage")); 
+       pageIndex=pageIndexArray[whichPage-1];  //pageIndex = pageIndexArray[1] = 3 → 代表這一頁從第 3 筆資料開始顯示
+    } catch (NumberFormatException e) { //第一次執行的時候，第一次訪問沒傳參數 → 回到第 1 頁
+       whichPage=1;
+       pageIndex=0;
+    } catch (ArrayIndexOutOfBoundsException e) { //總頁數之外的錯誤頁數，自動幫他跳到「最後一頁」
+         if (pageNumber>0){
+              whichPage=pageNumber;
+              pageIndex=pageIndexArray[pageNumber-1];
+         }
+    } 
+%>
+
+<%if (pageNumber>0){%>
+  <span style="color:red; font-weight:bold;">第<%=whichPage%>/<%=pageNumber%>頁</span>
+<%}%>
+
+<b>●符 合 查 詢 條 件 如 下 所 示: 共<font color=red><%=rowNumber%></font>筆</b>
