@@ -1,7 +1,11 @@
 package com.foodtimetest.coupon.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CouponService {
 
@@ -60,5 +64,27 @@ public class CouponService {
 	public List<CouponVO> getDistinctStorId(){
 		return dao.findDistinctStorId();
 	}
+	
+	public List<String> getDistinctCouType(){  //回傳不重複的優惠券類型
+		
+		List<CouponVO> allCoupons = dao.getAll();
+		Set<String> coutypes = new HashSet<>();
+		for(CouponVO coupon : allCoupons) {
+			 coutypes.add(coupon.getCouType());
+		}
+		return new ArrayList<>(coutypes);
+	}
+	
+	public List<CouponVO> getCouponsByCouType(String couType) {
+	    List<CouponVO> allCoupons = dao.getAll();
+	    List<CouponVO> filtered = new ArrayList<>();
 
+	    for (CouponVO coupon : allCoupons) {
+	        if (coupon.getCouType().equals(couType)) {
+	            filtered.add(coupon);
+	        }
+	    }
+
+	    return filtered;
+	}
 }

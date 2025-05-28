@@ -79,12 +79,12 @@
   <li>
      <FORM METHOD="post" ACTION="coupon.do" >
        <b>選擇優惠券類型:</b>
-       <select size="1" name="couId">
-         <c:forEach var="couponVO" items="${couponSvc.all}" > 
-          <option value="${couponVO.couId}">${couponVO.couType}
+       <select size="1" name="coutype">
+         <c:forEach var="coutype" items="${distinctCoutype}" > 
+          <option value="${coutype}">${coutype}
          </c:forEach>   
        </select>
-       <input type="hidden" name="action" value="getOne_For_Display">
+       <input type="hidden" name="action" value="getOne_Typecoupon_Display">
        <input type="submit" value="送出">
      </FORM>
   </li>

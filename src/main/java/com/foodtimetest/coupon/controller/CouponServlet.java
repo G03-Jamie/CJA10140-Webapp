@@ -23,11 +23,13 @@ public class CouponServlet extends HttpServlet {
 		String action = req.getParameter("action");
 		
 
-		    // 沒有 action，代表是初次載入 select_page.jsp → 載入不重複店家編號清單
+		    // 沒有 action，代表是初次載入 select_page.jsp → 載入不重複店家編號清單、不重複優惠券類型
 		    if (action == null) {
 		        CouponService couponSvc = new CouponService();
 		        List<CouponVO> distinctStorList = couponSvc.getDistinctStorId(); // 取得不重複商家id
 		        req.setAttribute("distinctStorList", distinctStorList);
+		        List<String> distinctCoutype = couponSvc.getDistinctCouType(); // 取得不重複優惠券類型
+		        req.setAttribute("distinctCoutype", distinctCoutype);
 		        
 		        RequestDispatcher dispatcher = req.getRequestDispatcher("/coupon/select_page.jsp");
 		        dispatcher.forward(req, res);
@@ -50,7 +52,7 @@ public class CouponServlet extends HttpServlet {
 			}
 			// Send the use back to the form, if there were errors
 			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/coupon/select_page.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/coupon/coupon.do");
 				failureView.forward(req, res);
 				return;// 有errorMsgs就跳頁，不處理後續流程，程式中斷
 
@@ -64,7 +66,7 @@ public class CouponServlet extends HttpServlet {
 			}
 			// Send the use back to the form, if there were errors
 			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/coupon/select_page.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/coupon/coupon.do");
 				failureView.forward(req, res);
 				return;// 有errorMsgs，程式中斷
 			}
@@ -77,7 +79,7 @@ public class CouponServlet extends HttpServlet {
 			}
 			// 如果有錯誤，將使用者導回原本的輸入表單頁面
 			if (!errorMsgs.isEmpty()) {
-				RequestDispatcher failureView = req.getRequestDispatcher("/coupon/select_page.jsp");
+				RequestDispatcher failureView = req.getRequestDispatcher("/coupon/coupon.do");
 				failureView.forward(req, res);
 				return;// 程式中斷
 			}
@@ -320,7 +322,7 @@ public class CouponServlet extends HttpServlet {
 					}
 					// Send the use back to the form, if there were errors
 					if (!errorMsgs.isEmpty()) {
-						RequestDispatcher failureView = req.getRequestDispatcher("/coupon/select_page.jsp");
+						RequestDispatcher failureView = req.getRequestDispatcher("/coupon/coupon.do");
 						failureView.forward(req, res);
 						return;// 有errorMsgs就跳頁，不處理後續流程，程式中斷
 
@@ -334,7 +336,7 @@ public class CouponServlet extends HttpServlet {
 					}
 					// Send the use back to the form, if there were errors
 					if (!errorMsgs.isEmpty()) {
-						RequestDispatcher failureView = req.getRequestDispatcher("/coupon/select_page.jsp");
+						RequestDispatcher failureView = req.getRequestDispatcher("/coupon/coupon.do");
 						failureView.forward(req, res);
 						return;// 有errorMsgs，程式中斷
 					}
@@ -347,7 +349,7 @@ public class CouponServlet extends HttpServlet {
 					}
 					// 如果有錯誤，將使用者導回原本的輸入表單頁面
 					if (!errorMsgs.isEmpty()) {
-						RequestDispatcher failureView = req.getRequestDispatcher("/coupon/select_page.jsp");
+						RequestDispatcher failureView = req.getRequestDispatcher("/coupon/coupon.do");
 						failureView.forward(req, res);
 						return;// 程式中斷
 					}
@@ -357,6 +359,24 @@ public class CouponServlet extends HttpServlet {
 					String url = "/coupon/listAllCoupon2.jsp";
 					RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listAllOneCoupon2.jsp
 					successView.forward(req, res);
+				}
+				
+				
+				// ****************各別優惠券類型查詢 ****************//
+
+				if ("getOne_Typecoupon_Display".equals(action)) {
+
+				    // 1. 接收使用者選擇的優惠券類型
+				    String couType = req.getParameter("coutype");
+
+				    // 2. 呼叫 Service 過濾出符合類型的優惠券
+				    CouponService couponSvc = new CouponService();
+				    List<CouponVO> couponList = couponSvc.getCouponsByCouType(couType);
+
+				    // 3. 傳送資料給 JSP 顯示
+				    req.setAttribute("storCoupons", couponList);
+				    RequestDispatcher successView = req.getRequestDispatcher("/coupon/listAllCoupon2.jsp");
+				    successView.forward(req, res);
 				}
 
 	}

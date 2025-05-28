@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.*" %>
 <%@ page import="com.foodtimetest.coupon.model.*"%>
 
@@ -76,8 +77,8 @@
 	<tr>
 		<th>優惠券編號</th>
 		<th>店家編號</th>
-		<th>優惠券說明</th>
 		<th>優惠券類型</th>
+		<th>優惠券說明</th>
 		<th>最低消費金額限制</th>
 		<th>使用期限</th>
 		<th>修改</th>
@@ -95,7 +96,7 @@
     	<td>${couponVO.couType }</td>
     	<td>${couponVO.couDes }</td>
     	<td>${couponVO.couMinOrd }</td>
-    	<td>${couponVO.couDate }</td>
+    	<td><fmt:formatDate value="${couponVO.couDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
     	
     	<%--修改按鈕 --%>
     	<td>
